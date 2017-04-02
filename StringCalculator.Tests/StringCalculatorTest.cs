@@ -57,18 +57,29 @@ namespace StringCalculator.Tests
         [TestMethod]
         public void NegativeNumbersThrowExeptionTest()
         {
-            var numbers = "//;\n3;-4;8,-12";
-            var exeptionMessage = ""
+            var numbers = "//;\n3;-4;8;-12";
+            var exceptionMessage = "Negatives not allowed: -4, -12";
+               
+            var exception = Assert.ThrowsException<NegativesNotAllowedException>(
+                                            () => new Calculator().Add(numbers));
 
-            try
-            {
-                var result = new Calculator().Add(numbers);
-            }
-            catch (Exception e)
-            {
-                
-            }
-            
+            Assert.AreEqual(exceptionMessage,exception.Message);
+        }
+
+        [TestMethod]
+        public void BiggerThan1000AreIgnoredTest()
+        {
+            var numbers = "//;\n3;1003;4;8;2048";
+            var result = new Calculator().Add(numbers);
+            Assert.AreEqual(15, result);
+        }
+
+        [TestMethod]
+        public void MultiplecharDelimetersAreAllowed()
+        {
+            var numbers = "//;\n3;1003;4;8;2048";
+            var result = new Calculator().Add(numbers);
+            Assert.AreEqual(15, result);
         }
 
     }

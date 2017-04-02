@@ -9,6 +9,7 @@ namespace StringCalculator
     {
         private string _numbers;
         private char _delimeter;
+        private List<int> _parsedNumbers;
 
         public int Add(string numbers)
         {
@@ -24,11 +25,25 @@ namespace StringCalculator
 
             SetDelimeter();
 
-            var parsedNumbers = ParseMultipleNumbers();
+            _parsedNumbers = ParseMultipleNumbers();
 
-            throw new 
+            CheckNegtiveNumber();
 
-            return parsedNumbers.Sum();
+            _parsedNumbers = _parsedNumbers.Where(n => n <= 1000).ToList();
+
+            return _parsedNumbers.Sum();
+        }
+
+        private void CheckNegtiveNumber()
+        {
+            var negativeNumbers = _parsedNumbers.Where(n => n < 0);
+            if (negativeNumbers.Count() > 0)
+            {
+                var stringNumbers = negativeNumbers.Select(n => n.ToString());
+                var listedNumbers = stringNumbers.Aggregate((current, next) => current + ", " + next);
+                var exeptionMessage = "Negatives not allowed: " + listedNumbers;
+                throw new NegativesNotAllowedException(exeptionMessage);
+            }
         }
 
         private void SetDelimeter()
@@ -48,11 +63,11 @@ namespace StringCalculator
         }
 
 
-        private IEnumerable<int> ParseMultipleNumbers()
+        private List<int> ParseMultipleNumbers()
         {
             var splittedNumbers = _numbers.Split(_delimeter);
             var parsedNumbers = splittedNumbers.Select(int.Parse);
-            return parsedNumbers;
+            return parsedNumbers.ToList();
         }
     }
 }
