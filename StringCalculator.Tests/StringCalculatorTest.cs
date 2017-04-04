@@ -10,7 +10,7 @@ namespace StringCalculator.Tests
         public void EmptyStringTest()
         {
             var numbers = string.Empty;
-            var result = new Calculator().Add(numbers);
+            var result = Calculator.Add(numbers);
             Assert.AreEqual(0,result);
         }
 
@@ -18,7 +18,7 @@ namespace StringCalculator.Tests
         public void OneNumberTest()
         {
             var numbers = "1";
-            var result = new Calculator().Add(numbers);
+            var result = Calculator.Add(numbers);
             Assert.AreEqual(1, result);
         }
 
@@ -26,7 +26,7 @@ namespace StringCalculator.Tests
         public void TwoNumbersTest()
         {
             var numbers = "3,4";
-            var result = new Calculator().Add(numbers);
+            var result = Calculator.Add(numbers);
             Assert.AreEqual(7, result);
         }
 
@@ -34,7 +34,7 @@ namespace StringCalculator.Tests
         public void MultipleNumbersTest()
         {
             var numbers = "3,4,8";
-            var result = new Calculator().Add(numbers);
+            var result = Calculator.Add(numbers);
             Assert.AreEqual(15, result);
         }
 
@@ -42,7 +42,7 @@ namespace StringCalculator.Tests
         public void NewLineDelimeterTest()
         {
             var numbers = "3\n4\n8";
-            var result = new Calculator().Add(numbers);
+            var result = Calculator.Add(numbers);
             Assert.AreEqual(15, result);
         }
 
@@ -50,7 +50,7 @@ namespace StringCalculator.Tests
         public void DifferentDelimetersTest()
         {
             var numbers = "//;\n3;4;8";
-            var result = new Calculator().Add(numbers);
+            var result = Calculator.Add(numbers);
             Assert.AreEqual(15, result);
         }
 
@@ -61,7 +61,7 @@ namespace StringCalculator.Tests
             var exceptionMessage = "Negatives not allowed: -4, -12";
                
             var exception = Assert.ThrowsException<NegativesNotAllowedException>(
-                                            () => new Calculator().Add(numbers));
+                                            () => Calculator.Add(numbers));
 
             Assert.AreEqual(exceptionMessage,exception.Message);
         }
@@ -70,15 +70,23 @@ namespace StringCalculator.Tests
         public void BiggerThan1000AreIgnoredTest()
         {
             var numbers = "//;\n3;1003;4;8;2048";
-            var result = new Calculator().Add(numbers);
+            var result = Calculator.Add(numbers);
             Assert.AreEqual(15, result);
         }
 
         [TestMethod]
         public void MultiplecharDelimetersAreAllowed()
         {
-            var numbers = "//;\n3;1003;4;8;2048";
-            var result = new Calculator().Add(numbers);
+            var numbers = "//[***]\n3***1003***4***8***2048";
+            var result = Calculator.Add(numbers);
+            Assert.AreEqual(15, result);
+        }
+
+        [TestMethod]
+        public void MultipleDifferentDelimetersAreAllowed()
+        {
+            var numbers = "//[*][%]\n1*2%3";
+            var result = Calculator.Add(numbers);
             Assert.AreEqual(15, result);
         }
 
